@@ -3,6 +3,7 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import Navbar from './components/Navbar'
+import Home from './components/Home'
 import Transactions from './components/Transactions'
 import Categories from './components/Categories'
 import Accounts from './components/Accounts'
@@ -19,6 +20,7 @@ function App() {
   return (
     <>
     <Navbar handleSelect={handleSelect}/>
+    {display === 'home' && <Home />}
     {display === 'transactions' && <Transactions />}
     {display === 'categories' && <Categories />}
     {display === 'accounts' && <Accounts />}
