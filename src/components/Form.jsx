@@ -5,7 +5,7 @@ const initialFormData = {
   password: '',
 };
 
-export default function Home() {
+export default function FormData() {
   const [formData, setFormData] = useState(initialFormData);
 
   const handleSubmit = (event) => {
@@ -25,7 +25,6 @@ export default function Home() {
 
   return (
     <>
-      <h2>Home</h2>
       <form onSubmit={handleSubmit}>
         <label>
           Username:

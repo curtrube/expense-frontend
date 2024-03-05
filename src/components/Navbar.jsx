@@ -1,10 +1,14 @@
 import NavButton from './NavButton';
 
-export default function Navbar({handleSelect}) {
+export default function Navbar({ handleSelect, isSelected }) {
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container-fluid">
-        <a className="navbar-brand" href="#" onClick={() => handleSelect('home')}>
+        <a
+          className="navbar-brand"
+          href="#"
+          onClick={() => handleSelect('home')}
+        >
           Expense Tracker
         </a>
         <button
@@ -20,10 +24,30 @@ export default function Navbar({handleSelect}) {
         </button>
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            <NavButton handleClick={() => handleSelect('transactions')}>Transactions</NavButton>
-            <NavButton handleClick={() => handleSelect('categories')}>Categories</NavButton>
-            <NavButton handleClick={() => handleSelect('accounts')}>Accounts</NavButton>
-            <NavButton handleClick={() => handleSelect('about')}>About</NavButton>
+            <NavButton
+              handleClick={() => handleSelect('transactions')}
+              isSelected={isSelected === 'transactions'}
+            >
+              Transactions
+            </NavButton>
+            <NavButton
+              handleClick={() => handleSelect('categories')}
+              isSelected={isSelected === 'categories'}
+            >
+              Categories
+            </NavButton>
+            <NavButton
+              handleClick={() => handleSelect('accounts')}
+              isSelected={isSelected === 'accounts'}
+            >
+              Accounts
+            </NavButton>
+            <NavButton
+              handleClick={() => handleSelect('about')}
+              isSelected={isSelected === 'about'}
+            >
+              About
+            </NavButton>
           </ul>
         </div>
       </div>
