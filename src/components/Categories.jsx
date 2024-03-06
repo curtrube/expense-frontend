@@ -1,35 +1,31 @@
-import { useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
+import { useState, useEffect } from 'react';
+
+function getCategories(setCategories) {
+  fetch('http://localhost:3000/categories')
+    .then((response) => response.json())
+    .then((data) => setCategories(data.categories));
+}
 
 export default function Categories() {
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const [categories, setCategories] = useState([]);
+  useEffect(() => {
+    getCategories(setCategories);
+  }, []);
+
   return (
-    <>
-      <h2>Categories Home</h2>
-      <Button variant="success" onClick={handleShow}>
-        New
-      </Button>
-      <Modal show={show}>
-        <Modal.Header closeButton>
-          <Modal.Title>Modal title</Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-            <p>Modal body goes here</p>
-        </Modal.Body>
-
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Save
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </>
+    <div className="container">
+      <div className="d-flex flex-column">
+        {categories.map((item, index) => (
+          <div className="card m-1" key={index}>
+            <div className="card d-flex flex-row">
+              <div className="card-body">{item.name}</div>
+              <div className="p-2">
+                <button className="btn btn-outline-secondary">Edit</button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }

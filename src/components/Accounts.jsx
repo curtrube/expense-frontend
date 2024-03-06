@@ -17,8 +17,8 @@ export default function Accounts() {
   return (
     <div className="d-flex">
       {accounts.map((item, index) => (
-        <div className="m-1">
-          <AccountCard key={index} {...item} />
+        <div className="m-1" key={index}>
+          <AccountCard {...item} />
         </div>
       ))}
     </div>

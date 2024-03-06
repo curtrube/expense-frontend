@@ -13,7 +13,6 @@ function App() {
   const [display, setDisplay] = useState('Hello World');
 
   function handleSelect(selection) {
-    console.log(selection);
     setDisplay(selection);
   }
 
