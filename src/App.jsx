@@ -20,7 +20,7 @@ function App() {
   return (
     <>
       <Navbar handleSelect={handleSelect} isSelected={display} />
-      <Home />
+      {display === 'home' && <Home />}
       {display === 'transactions' && <Transactions />}
       {display === 'categories' && <Categories />}
       {display === 'accounts' && <Accounts />}
