@@ -1,18 +1,14 @@
 import { Button, Modal, Form } from 'react-bootstrap';
 
-export default function NewCategoryModal({
+export default function CategoryModal({
   show,
+  title,
   handleClose,
-  handleShow,
   handleChange,
   handleSubmit,
 }) {
   return (
     <>
-      <Button variant="primary" onClick={handleShow}>
-        New Category
-      </Button>
-
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Create new category</Modal.Title>
@@ -25,6 +21,7 @@ export default function NewCategoryModal({
               name="name"
               placeholder="Category name"
               onChange={handleChange}
+              autoFocus
             />
           </Form>
         </Modal.Body>

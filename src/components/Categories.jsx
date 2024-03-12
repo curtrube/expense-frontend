@@ -1,16 +1,16 @@
 import { useState, useEffect } from 'react';
-import NewCategoryModal from './NewCategoryModal';
+import CategoryModal from './CategoryModal';
 
-const URL = 'http://localhost:3000/categories';
+const url = 'http://localhost:3000/categories';
 
 function getCategories(setCategories) {
-  fetch(URL)
+  fetch(url)
     .then((response) => response.json())
     .then((data) => setCategories(data.categories));
 }
 
 function postCategory(category) {
-  fetch(URL, {
+  fetch(url, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -30,7 +30,7 @@ function postCategory(category) {
 }
 
 function deleteCategory(categoryId) {
-  fetch(`${URL}/${categoryId}`, {
+  fetch(`${url}/${categoryId}`, {
     method: 'DELETE',
     headers: {
       Accept: 'application/json',
@@ -45,7 +45,10 @@ export default function Categories() {
   const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({});
   const [show, setShow] = useState(false);
+  const [editData, setEditData] = useState(null);
+
   const handleClose = () => setShow(false);
+
   const handleShow = () => setShow(true);
 
   const handleSubmit = (event) => {
@@ -63,26 +66,39 @@ export default function Categories() {
     }));
   };
 
+  const handleEdit = (data) => {
+    console.log(data);
+    setEditData(data);
+    setShow(true);
+  };
+
   useEffect(() => {
     getCategories(setCategories);
   }, [categories]);
+
   return (
     <>
-      <NewCategoryModal
+      <CategoryModal
         show={show}
         handleClose={handleClose}
-        handleShow={handleShow}
         handleChange={handleChange}
         handleSubmit={handleSubmit}
+        initialValues={editData}
       />
       <div className="container">
+        <button className="btn btn-primary" onClick={handleShow}>
+          New Category
+        </button>
         <div className="d-flex flex-column">
           {categories.map((item, index) => (
             <div className="card m-1" key={index}>
               <div className="card d-flex flex-row">
                 <div className="card-body">{item.name}</div>
                 <div className="p-2">
-                  <button className="btn btn-outline-secondary m-1">
+                  <button
+                    className="btn btn-outline-secondary m-1"
+                    onClick={() => handleEdit(item.name)}
+                  >
                     Edit
                   </button>
                   <button className="btn btn-outline-danger m-1">Delete</button>
