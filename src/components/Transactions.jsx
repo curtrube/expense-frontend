@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 function getTransactions(setTransactions) {
-  fetch('http://localhost:3000/transactions')
+  fetch('http://localhost:8080/transactions')
     .then((response) => response.json())
     .then((data) => setTransactions(data.transactions));
 }
