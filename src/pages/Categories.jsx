@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import CategoryModal from './CategoryModal';
+import CategoryModal from '../components/CategoryModal';
 
-const url = 'http://localhost:8080/categories';
+const url = 'http://localhost:3000/categories';
 
 function getCategories(setCategories) {
   fetch(url)
@@ -54,6 +54,7 @@ export default function Categories() {
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log(`Form submitted`);
+    console.log(formData);
     postCategory(formData);
     handleClose();
   };
@@ -85,29 +86,28 @@ export default function Categories() {
         handleSubmit={handleSubmit}
         initialValues={editData}
       />
-      <div className="container">
-        <button className="btn btn-primary" onClick={handleShow}>
-          New Category
-        </button>
-        <div className="d-flex flex-column">
-          {categories.map((item, index) => (
-            <div className="card m-1" key={index}>
-              <div className="card d-flex flex-row">
-                <div className="card-body">{item.name}</div>
-                <div className="p-2">
-                  <button
-                    className="btn btn-outline-secondary m-1"
-                    onClick={() => handleEdit(item.name)}
-                  >
-                    Edit
-                  </button>
-                  <button className="btn btn-outline-danger m-1">Delete</button>
-                </div>
-              </div>
-            </div>
-          ))}
+      <button className="btn btn-primary" onClick={handleShow}>
+        New Category
+      </button>
+      {categories.map((item, index) => (
+        <div className="card flex-row m-2" key={index}>
+          <div className="card-body">
+            <h5 className="card-title">{item.name}</h5>
+            <p className="card-subtitle mb-2 text-body-secondary">
+              {item.description}
+            </p>
+          </div>
+          <div className="p-3">
+            <button
+              className="btn btn-outline-secondary m-1"
+              onClick={() => handleEdit(item.name)}
+            >
+              Edit
+            </button>
+            <button className="btn btn-outline-danger m-1">Delete</button>
+          </div>
         </div>
-      </div>
+      ))}
     </>
   );
 }

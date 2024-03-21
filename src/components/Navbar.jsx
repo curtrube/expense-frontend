@@ -1,56 +1,42 @@
-import NavButton from './NavButton';
+import { useState } from 'react';
+import { Container, Navbar as BsNavbar, Nav } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
-export default function Navbar({ handleSelect, isSelected }) {
+const Navbar = () => {
+  const [expanded, setExpanded] = useState(false);
+
+  const handleSelect = () => {
+    setExpanded(false); // Close the navbar when a link is clicked
+  };
+
   return (
-    <nav className="navbar navbar-expand-lg bg-body-tertiary">
-      <div className="container-fluid">
-        <a
-          className="navbar-brand"
-          href="#"
-          onClick={() => handleSelect('home')}
-        >
+    <BsNavbar
+      bg="light"
+      expand="lg"
+      expanded={expanded}
+      onSelect={handleSelect}
+    >
+      <Container fluid>
+        <BsNavbar.Brand as={Link} to="/">
           Expense Tracker
-        </a>
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            <NavButton
-              handleClick={() => handleSelect('transactions')}
-              isSelected={isSelected === 'transactions'}
-            >
-              Transactions
-            </NavButton>
-            <NavButton
-              handleClick={() => handleSelect('categories')}
-              isSelected={isSelected === 'categories'}
-            >
+        </BsNavbar.Brand>
+        <BsNavbar.Toggle
+          aria-controls="navbar-nav"
+          onClick={() => setExpanded(expanded ? false : 'expanded')}
+        />
+        <BsNavbar.Collapse id="navbar-nav">
+          <Nav className="me-auto">
+            <Nav.Link href="#" as={Link} to="/categories" active>
               Categories
-            </NavButton>
-            <NavButton
-              handleClick={() => handleSelect('accounts')}
-              isSelected={isSelected === 'accounts'}
-            >
+            </Nav.Link>
+            <Nav.Link href="#" as={Link} to="/accounts">
               Accounts
-            </NavButton>
-            <NavButton
-              handleClick={() => handleSelect('about')}
-              isSelected={isSelected === 'about'}
-            >
-              About
-            </NavButton>
-          </ul>
-        </div>
-      </div>
-    </nav>
+            </Nav.Link>
+          </Nav>
+        </BsNavbar.Collapse>
+      </Container>
+    </BsNavbar>
   );
-}
+};
+
+export default Navbar;

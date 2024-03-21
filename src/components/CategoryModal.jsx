@@ -19,9 +19,22 @@ export default function CategoryModal({
               required
               type="text"
               name="name"
-              placeholder="Category name"
+              placeholder="Name"
               onChange={handleChange}
               autoFocus
+              aria-describedby="newCategoryName"
+            />
+            <Form.Text id="newCategoryName" muted>
+              New categories must not execeed 20 characters.
+            </Form.Text>
+            <Form.Control
+              as="textarea"
+              type="text"
+              rows={3}
+              name="description"
+              placeholder="Description"
+              onChange={handleChange}
+              aria-describedby="newCategoryDescription"
             />
           </Form>
         </Modal.Body>
