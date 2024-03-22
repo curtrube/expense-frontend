@@ -53,8 +53,6 @@ export default function Categories() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(`Form submitted`);
-    console.log(formData);
     postCategory(formData);
     handleClose();
   };
@@ -68,14 +66,13 @@ export default function Categories() {
   };
 
   const handleEdit = (data) => {
-    console.log(data);
     setEditData(data);
     setShow(true);
   };
 
   useEffect(() => {
     getCategories(setCategories);
-  }, [categories]);
+  }, []);
 
   return (
     <>

@@ -18,7 +18,7 @@ const Navbar = () => {
     >
       <Container fluid>
         <BsNavbar.Brand as={Link} to="/">
-          Expense Tracker
+          ExpenseTracker
         </BsNavbar.Brand>
         <BsNavbar.Toggle
           aria-controls="navbar-nav"
