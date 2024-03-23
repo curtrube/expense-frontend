@@ -56,7 +56,8 @@ export default function Categories() {
   const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({});
   const [show, setShow] = useState(false);
-  const [editData, setEditData] = useState(null);
+  const [editModalShow, setEditModalShow] = useState(false);
+  // const [editData, setEditData] = useState(null);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -73,7 +74,7 @@ export default function Categories() {
   const handleSubmit = (event) => {
     event.preventDefault();
     postCategory(formData, setCategories);
-    handleClose();
+    setEditModalShow(false);
   };
 
   const handleChange = (event) => {
@@ -84,17 +85,25 @@ export default function Categories() {
     }));
   };
 
-  // Open Edit/Delete Modals
+  const openNewModal = () => {
+    console.log(`entered openNewModal() with`);
+    setSelectedItem(null);
+    setEditModalShow(true);
+  };
 
   const openEditModal = (item) => {
-    // console.log(`entered handleDelete() with ${categoryName}`);
-    setEditData(item);
-    setShow(true);
+    console.log(`entered openEditModal() with ${item}`);
+    const newItem = {
+      ...item,
+      type: 'edit',
+    };
+    setSelectedItem(() => newItem);
+    setEditModalShow(true);
   };
 
   const openDeleteModal = (item) => {
     console.log(item);
-    console.log(`entered handleDelete() with item: ${JSON.stringify(item)}`);
+    console.log(`entered openDeleteModal() with item: ${JSON.stringify(item)}`);
     setSelectedItem(() => item);
     setDeleteModalShow(true);
   };
@@ -116,7 +125,7 @@ export default function Categories() {
 
   return (
     <>
-      <button className="btn btn-primary" onClick={handleShow}>
+      <button className="btn btn-primary" onClick={openNewModal}>
         New Category
       </button>
 
@@ -146,17 +155,17 @@ export default function Categories() {
       ))}
 
       <CategoryModal
-        show={show}
-        handleClose={handleClose}
+        show={editModalShow}
+        handleClose={() => setEditModalShow(false)}
         handleChange={handleChange}
         handleSubmit={handleSubmit}
-        initialValues={editData}
+        {...selectedItem}
       />
 
       <DeleteModal
         show={deleteModalShow}
         handleClose={() => setDeleteModalShow(false)}
-        handleSave={() => handleDelete(selectedItem)}
+        handleSubmit={() => handleDelete(selectedItem)}
         {...selectedItem}
       />
     </>

@@ -1,7 +1,7 @@
 // import { useState } from 'react';
 import { Button, Modal as BsModal } from 'react-bootstrap';
 
-const DeleteModal = ({ show, handleClose, handleSave, name }) => {
+const DeleteModal = ({ show, handleClose, handleSubmit, name }) => {
   // const [show, setShow] = useState(false);
 
   // const handleClose = () => setShow(false);
@@ -19,7 +19,7 @@ const DeleteModal = ({ show, handleClose, handleSave, name }) => {
           <Button variant="secondary" onClick={handleClose}>
             Cancel
           </Button>
-          <Button variant="primary" onClick={handleSave}>
+          <Button variant="primary" onClick={handleSubmit}>
             Save
           </Button>
         </BsModal.Footer>
