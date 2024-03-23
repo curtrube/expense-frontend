@@ -25,7 +25,7 @@ export default function CategoryModal({
               aria-describedby="newCategoryName"
             />
             <Form.Text id="newCategoryName" muted>
-              New categories must not execeed 20 characters.
+              New categories must not execeed 20 characters. (This is confusing)
             </Form.Text>
             <Form.Control
               as="textarea"

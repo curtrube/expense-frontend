@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import CategoryModal from '../components/CategoryModal';
+import DeleteModal from '../components/Modal';
 
 const url = 'http://localhost:3000/categories';
 
@@ -9,7 +10,7 @@ function getCategories(setCategories) {
     .then((data) => setCategories(data.categories));
 }
 
-function postCategory(category) {
+function postCategory(category, setCategories) {
   fetch(url, {
     method: 'POST',
     headers: {
@@ -26,10 +27,15 @@ function postCategory(category) {
       return response;
     })
     .then((response) => response.json())
-    .then((data) => console.log(data));
+    .then((data) => {
+      const newItem = data.categories[0];
+      console.log(`created new item ${newItem}`);
+      setCategories((prevCategories) => [...prevCategories, newItem]);
+    });
 }
 
-function deleteCategory(categoryId) {
+function deleteCategory(categoryId, setCategories) {
+  console.log(`deleteing category with id: ${categoryId}`);
   fetch(`${url}/${categoryId}`, {
     method: 'DELETE',
     headers: {
@@ -38,7 +44,12 @@ function deleteCategory(categoryId) {
     },
   })
     .then((response) => response.json())
-    .then((data) => console.log(data));
+    .then(() => {
+      setCategories((prevCategories) =>
+        prevCategories.filter((item) => item.category_id !== categoryId)
+      );
+      console.log('successfully deleted category');
+    });
 }
 
 export default function Categories() {
@@ -48,12 +59,20 @@ export default function Categories() {
   const [editData, setEditData] = useState(null);
 
   const handleClose = () => setShow(false);
-
   const handleShow = () => setShow(true);
+
+  // handle delete modal
+  // const [deleteData, setDeleteData] = useState('');
+  const [deleteModalShow, setDeleteModalShow] = useState(false);
+  // const handleDeleteClose = () => setDeleteShow(false);
+  // const handleDeleteShow = () => setDeleteShow(true);
+
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [dataLoaded, setDataLoaded] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    postCategory(formData);
+    postCategory(formData, setCategories);
     handleClose();
   };
 
@@ -65,27 +84,42 @@ export default function Categories() {
     }));
   };
 
-  const handleEdit = (data) => {
-    setEditData(data);
+  // Open Edit/Delete Modals
+
+  const openEditModal = (item) => {
+    // console.log(`entered handleDelete() with ${categoryName}`);
+    setEditData(item);
     setShow(true);
+  };
+
+  const openDeleteModal = (item) => {
+    console.log(item);
+    console.log(`entered handleDelete() with item: ${JSON.stringify(item)}`);
+    setSelectedItem(() => item);
+    setDeleteModalShow(true);
+  };
+
+  const handleDelete = (item) => {
+    console.log(`entered handleDelete() with ${item.category_id}`);
+    deleteCategory(item.category_id, setCategories);
+    setDeleteModalShow(false);
   };
 
   useEffect(() => {
     getCategories(setCategories);
+    setDataLoaded(true);
   }, []);
+
+  if (!dataLoaded) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
-      <CategoryModal
-        show={show}
-        handleClose={handleClose}
-        handleChange={handleChange}
-        handleSubmit={handleSubmit}
-        initialValues={editData}
-      />
       <button className="btn btn-primary" onClick={handleShow}>
         New Category
       </button>
+
       {categories.map((item, index) => (
         <div className="card flex-row m-2" key={index}>
           <div className="card-body">
@@ -97,14 +131,34 @@ export default function Categories() {
           <div className="p-3">
             <button
               className="btn btn-outline-secondary m-1"
-              onClick={() => handleEdit(item.name)}
+              onClick={() => openEditModal(item)}
             >
               Edit
             </button>
-            <button className="btn btn-outline-danger m-1">Delete</button>
+            <button
+              className="btn btn-outline-danger m-1"
+              onClick={() => openDeleteModal(item)}
+            >
+              Delete
+            </button>
           </div>
         </div>
       ))}
+
+      <CategoryModal
+        show={show}
+        handleClose={handleClose}
+        handleChange={handleChange}
+        handleSubmit={handleSubmit}
+        initialValues={editData}
+      />
+
+      <DeleteModal
+        show={deleteModalShow}
+        handleClose={() => setDeleteModalShow(false)}
+        handleSave={() => handleDelete(selectedItem)}
+        {...selectedItem}
+      />
     </>
   );
 }
