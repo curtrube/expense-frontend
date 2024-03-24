@@ -34,6 +34,33 @@ function postCategory(category, setCategories) {
     });
 }
 
+function putCategory(categoryItem, setCategories) {
+  console.log(`Entered putCategory() with item ${categoryItem}`);
+  const { id } = categoryItem;
+  console.log(id);
+  fetch(`${url}/${id}`, {
+    method: 'PUT',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(categoryItem),
+  })
+    .then((response) => {
+      console.log(`Status Code: ${response.status}`);
+      if (!response.ok) {
+        throw new Error(`HTTP Error, status = ${response.status}`);
+      }
+      return response;
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      const newItem = data.categories[0];
+      console.log(`updated item ${newItem}`);
+      setCategories((prevCategories) => [...prevCategories, newItem]);
+    });
+}
+
 function deleteCategory(categoryId, setCategories) {
   console.log(`deleteing category with id: ${categoryId}`);
   fetch(`${url}/${categoryId}`, {
@@ -101,6 +128,12 @@ export default function Categories() {
     setEditModalShow(true);
   };
 
+  const handleEdit = (item) => {
+    console.log(`entered handleEdit() with ${item}`);
+    putCategory(item, setCategories);
+    setEditModalShow(false);
+  };
+
   const openDeleteModal = (item) => {
     console.log(item);
     console.log(`entered openDeleteModal() with item: ${JSON.stringify(item)}`);
@@ -158,7 +191,7 @@ export default function Categories() {
         show={editModalShow}
         handleClose={() => setEditModalShow(false)}
         handleChange={handleChange}
-        handleSubmit={handleSubmit}
+        handleSubmit={() => handleEdit(selectedItem)}
         {...selectedItem}
       />
 
