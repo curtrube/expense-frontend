@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import CategoryModal from '../components/CategoryModal';
 import DeleteModal from '../components/Modal';
 
-const url = 'http://localhost:3000/categories';
+const url = 'http://localhost:3000/api/categories';
 
 function getCategories(setCategories) {
   fetch(url)

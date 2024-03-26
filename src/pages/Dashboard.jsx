@@ -1,9 +1,21 @@
 import { useState, useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
 import Spinner from '../components/Spinner';
+import Cookies from 'js-cookie';
 
 function getTransactions(setTransactions, setIsLoading) {
-  fetch('http://localhost:3000/transactions')
-    .then((response) => response.json())
+  fetch('http://localhost:3000/api/transactions', {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: Cookies.get('accessToken'),
+    },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
     .then((data) => {
       setTransactions(data.transactions);
       setIsLoading(false);
@@ -14,14 +26,23 @@ function getTransactions(setTransactions, setIsLoading) {
     });
 }
 
-function Transactions() {
+function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
+  // const [authenticated, setAuthenticated] = useState(null);
   const [transactions, setTransactions] = useState([]);
 
   useEffect(() => {
+    // const loggedInUser = Cookies.get('accessToken');
+    // if (loggedInUser) {
+    //   console.log(loggedInUser);
+    //   setAuthenticated(loggedInUser);
+    // }
     getTransactions(setTransactions, setIsLoading);
   }, []);
 
+  // if (!authenticated) {
+  //   return <Navigate replace to="/login" />;
+  // } else {
   return isLoading ? (
     <Spinner />
   ) : (
@@ -41,6 +62,7 @@ function Transactions() {
       ))}
     </>
   );
+  // }
 }
 
-export default Transactions;
+export default Dashboard;

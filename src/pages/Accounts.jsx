@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import AccountCard from '../components/AccountCard';
 
 function getAccounts(setAccounts) {
-  fetch('http://localhost:3000/accounts')
+  fetch('http://localhost:3000/api/accounts')
     .then((response) => response.json())
     .then((data) => setAccounts(data.accounts));
 }
