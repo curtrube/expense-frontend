@@ -41,7 +41,6 @@ function App() {
               <Route path="/accounts" element={<Accounts />} />
             </>
           ) : (
-            // Redirect to /login
             <Route path="*" element={<Navigate to="/login" />} />
           )}
         </Routes>
