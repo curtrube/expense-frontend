@@ -1,44 +1,21 @@
-import { useState, useEffect } from 'react';
-import Spinner from '../components/Spinner';
+import { Link } from 'react-router-dom';
 
-function getTransactions(setTransactions, setIsLoading) {
-  fetch('http://localhost:3000/transactions')
-    .then((response) => response.json())
-    .then((data) => {
-      setTransactions(data.transactions);
-      setIsLoading(false);
-    })
-    .catch((err) => {
-      console.error('Error fetching transactions', err);
-      setIsLoading(true);
-    });
-}
-
-export default function Home() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [transactions, setTransactions] = useState([]);
-
-  useEffect(() => {
-    getTransactions(setTransactions, setIsLoading);
-  }, []);
-
-  return isLoading ? (
-    <Spinner />
-  ) : (
-    <>
-      {transactions.map((item, index) => (
-        <div className="card flex-row m-2" key={index}>
-          <div className="card-body">
-            <h5 className="card-title">{item.merchant}</h5>
-            <h6 className="card-subtitle mb-2 text-body-secondary">
-              {item.category}
-            </h6>
-          </div>
-          <div className="p-3">
-            <p className="m-0">${item.amount}</p>
-          </div>
-        </div>
-      ))}
-    </>
+function Home() {
+  return (
+    <div className="p-5 mb-4 bg-body-tertiary border rounded-3">
+      <div className="container-fluid py-5">
+        <h1 className="display-5 fw-bold">ExpenseTracker</h1>
+        <p className="col-md-8 fs-4">
+          Expense Tracker simplifies the management of your finances by
+          effortlessly monitoring and organizing your expenses, helping you stay
+          on top of your spending habits.
+        </p>
+        <Link to="/login">
+          <button className="btn btn-primary btn-lg">Get Started</button>
+        </Link>
+      </div>
+    </div>
   );
 }
+
+export default Home;
