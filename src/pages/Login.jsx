@@ -1,56 +1,19 @@
 import { useState } from 'react';
-import Cookies from 'js-cookie';
 import { Button, Form } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/authProvider';
 
-// Function to set the authentication token as a cookie
-const setCookie = (name, token) => {
-  let expiry = null;
-  if (name === 'accessToken') {
-    // expire access token after 15min
-    expiry = new Date(new Date().getTime() + 15 * 60 * 1000);
-  } else {
-    // 4hrs
-    expiry = new Date(new Date().getTime() + 4 * 60 * 60 * 1000);
-  }
-  Cookies.set(name, `Bearer ${token}`, {
-    expires: expiry,
-    domain: 'localhost',
-  });
-};
-
-function Login({ onLogin }) {
-  const navigate = useNavigate();
+function Login() {
   const [input, setInput] = useState({
     username: '',
     password: '',
   });
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    console.log(input);
+  const auth = useAuth();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     if (input.username !== '' && input.password !== '') {
-      try {
-        const response = await fetch('http://localhost:3000/api/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(input),
-        });
-        if (response.status === 401) {
-          throw new Error('Unauthorized');
-        }
-        if (response.status === 200) {
-          const data = await response.json();
-          setCookie('accessToken', data.accessToken);
-          setCookie('refreshToken', data.refreshToken);
-          onLogin();
-          navigate('/dashboard');
-        }
-      } catch (err) {
-        console.error(err);
-      }
+      auth.loginAction(input);
+      return;
     }
     alert('Enter username and/or password');
   };

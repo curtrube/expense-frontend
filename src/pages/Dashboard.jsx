@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Navigate } from 'react-router-dom';
 import Spinner from '../components/Spinner';
+import { useAuth } from '../hooks/authProvider';
 import Cookies from 'js-cookie';
 
-function getTransactions(setTransactions, setIsLoading) {
+function getTransactions(accessToken, setTransactions, setIsLoading) {
   fetch('http://localhost:3000/api/transactions', {
     headers: {
       'Content-Type': 'application/json',
-      Authorization: Cookies.get('accessToken'),
+      // Authorization: Cookies.get('accessToken'),
+      Authorization: `Bearer ${accessToken}`,
     },
   })
     .then((response) => {
@@ -28,21 +29,13 @@ function getTransactions(setTransactions, setIsLoading) {
 
 function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
-  // const [authenticated, setAuthenticated] = useState(null);
   const [transactions, setTransactions] = useState([]);
+  const { token } = useAuth();
 
   useEffect(() => {
-    // const loggedInUser = Cookies.get('accessToken');
-    // if (loggedInUser) {
-    //   console.log(loggedInUser);
-    //   setAuthenticated(loggedInUser);
-    // }
-    getTransactions(setTransactions, setIsLoading);
+    getTransactions(token, setTransactions, setIsLoading);
   }, []);
 
-  // if (!authenticated) {
-  //   return <Navigate replace to="/login" />;
-  // } else {
   return isLoading ? (
     <Spinner />
   ) : (
@@ -62,7 +55,6 @@ function Dashboard() {
       ))}
     </>
   );
-  // }
 }
 
 export default Dashboard;
