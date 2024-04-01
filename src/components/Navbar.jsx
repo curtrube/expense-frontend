@@ -17,7 +17,7 @@ const Navbar = () => {
       onSelect={handleSelect}
     >
       <Container fluid>
-        <BsNavbar.Brand as={Link} to="/">
+        <BsNavbar.Brand as={Link} to="/dashboard">
           ExpenseTracker
         </BsNavbar.Brand>
         <BsNavbar.Toggle
