@@ -5,7 +5,7 @@ import DeleteModal from '../components/Modal';
 const url = 'http://localhost:3000/api/categories';
 
 function getCategories(setCategories) {
-  fetch(url)
+  fetch(url, { credentials: 'include' })
     .then((response) => response.json())
     .then((data) => setCategories(data.categories));
 }

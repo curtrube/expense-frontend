@@ -5,9 +5,9 @@ import Cookies from 'js-cookie';
 
 function getTransactions(accessToken, setTransactions, setIsLoading) {
   fetch('http://localhost:3000/api/transactions', {
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
-      // Authorization: Cookies.get('accessToken'),
       Authorization: `Bearer ${accessToken}`,
     },
   })

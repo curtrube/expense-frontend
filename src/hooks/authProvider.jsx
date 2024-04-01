@@ -22,20 +22,12 @@ const AuthContent = createContext();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
   const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   console.log('setting accessToken');
-  //   const accessToken = Cookies.get('accessToken');
-  //   if (accessToken) {
-  //     setToken(accessToken);
-  //   }
-  // }, []);
 
   const loginAction = async (data) => {
     try {
       const response = await fetch('http://localhost:3000/api/login', {
+        credentials: 'include',
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -50,7 +42,7 @@ const AuthProvider = ({ children }) => {
         if (res) {
           console.log(res);
           setUser(res.user);
-          setToken(res.accessToken);
+          // setToken(res.accessToken);
           // setCookie('accessToken', res.accessToken);
           navigate('/dashboard');
           return;
@@ -64,13 +56,13 @@ const AuthProvider = ({ children }) => {
 
   const logOut = () => {
     setUser(null);
-    setToken('');
+    // setToken('');
     // Cookies.remove('accessToken');
     navigate('/login');
   };
 
   return (
-    <AuthContent.Provider value={{ token, user, loginAction, logOut }}>
+    <AuthContent.Provider value={{ user, loginAction, logOut }}>
       {children}
     </AuthContent.Provider>
   );
