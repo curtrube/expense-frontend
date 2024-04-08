@@ -1,11 +1,18 @@
 import { useState, useEffect } from 'react';
 import CategoryModal from '../components/CategoryModal';
 import DeleteModal from '../components/Modal';
+import { useAuth } from '../hooks/authProvider';
 
 const url = 'http://localhost:3000/api/categories';
 
-function getCategories(setCategories) {
-  fetch(url, { credentials: 'include' })
+function getCategories(accessToken, setCategories) {
+  fetch(url, {
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: `Bearer ${accessToken}`,
+    },
+  })
     .then((response) => response.json())
     .then((data) => setCategories(data.categories));
 }
@@ -80,6 +87,7 @@ function deleteCategory(categoryId, setCategories) {
 }
 
 export default function Categories() {
+  const { token } = useAuth();
   const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({});
   const [show, setShow] = useState(false);
@@ -148,7 +156,7 @@ export default function Categories() {
   };
 
   useEffect(() => {
-    getCategories(setCategories);
+    getCategories(token, setCategories);
     setDataLoaded(true);
   }, []);
 
