@@ -12,7 +12,7 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (input.username !== '' && input.password !== '') {
-      auth.loginAction(input);
+      auth.login(input);
       return;
     }
     alert('Enter username and/or password');

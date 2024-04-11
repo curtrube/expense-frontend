@@ -1,22 +1,5 @@
 import { useContext, createContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Cookies from 'js-cookie';
-
-// const setCookie = (name, token) => {
-//   let expiry = null;
-//   if (name === 'accessToken') {
-//     // expire access token after 15min
-//     expiry = new Date(new Date().getTime() + 15 * 60 * 1000);
-//   } else {
-//     // 4hrs
-//     expiry = new Date(new Date().getTime() + 4 * 60 * 60 * 1000);
-//   }
-//   Cookies.set(name, `Bearer ${token}`, {
-//     expires: expiry,
-//     secure: true,
-//     domain: 'localhost', // TODO: update this
-//   });
-// };
 
 const AuthContent = createContext();
 
@@ -25,7 +8,7 @@ const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const navigate = useNavigate();
 
-  const loginAction = async (data) => {
+  const login = async (data) => {
     try {
       const response = await fetch('http://localhost:3000/api/login', {
         credentials: 'include',
@@ -54,7 +37,7 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  const logOut = () => {
+  const logout = () => {
     setUser(null);
     // setToken('');
     // Cookies.remove('accessToken');
@@ -62,7 +45,7 @@ const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContent.Provider value={{ user, token, loginAction, logOut }}>
+    <AuthContent.Provider value={{ user, token, login, logout }}>
       {children}
     </AuthContent.Provider>
   );

@@ -7,13 +7,15 @@ import Categories from './pages/Categories';
 import Accounts from './pages/Accounts';
 import Dashboard from './pages/Dashboard';
 import PrivateRoute from './components/PrivateRoute';
+import { useAuth } from './hooks/authProvider';
+import { useEffect } from 'react';
 
 function App() {
   return (
     <>
       <Router>
         <AuthProvider>
-          <Navbar />
+          {/* <Navbar /> */}
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
