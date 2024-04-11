@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import Spinner from '../components/Spinner';
 import { useAuth } from '../hooks/authProvider';
-import Cookies from 'js-cookie';
 
 function getTransactions(accessToken, setTransactions, setIsLoading) {
   fetch('http://localhost:3000/api/transactions', {

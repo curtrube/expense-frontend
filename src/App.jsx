@@ -7,13 +7,17 @@ import Categories from './pages/Categories';
 import Accounts from './pages/Accounts';
 import Dashboard from './pages/Dashboard';
 import PrivateRoute from './components/PrivateRoute';
+import { useAuth } from './hooks/authProvider';
+import { useEffect } from 'react';
+import Register from './components/Register';
 
 function App() {
   return (
     <>
-      <Router>
+      <Register />
+      {/* <Router>
         <AuthProvider>
-          <Navbar />
+          {/* <Navbar /> 
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
@@ -24,7 +28,7 @@ function App() {
             </Route>
           </Routes>
         </AuthProvider>
-      </Router>
+      </Router> */}
     </>
   );
 }
