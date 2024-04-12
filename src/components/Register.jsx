@@ -48,6 +48,13 @@ const Register = () => {
 
   return (
     <section>
+      <p
+        ref={errRef}
+        className={errMsg ? 'errmsg' : 'offscreen'}
+        aria-live="assertive"
+      >
+        {errMsg}
+      </p>
       <div className="mb-4">
         <h1>Register</h1>
       </div>
@@ -55,41 +62,58 @@ const Register = () => {
         <div className="mb-3">
           <label className="form-label" htmlFor="username">
             Username
-            <input
-              className="form-control"
-              type="text"
-              name="username"
-              id="username"
-              placeholder="username"
-              required
-              autoComplete="off"
-              ref={userRef}
-            />
           </label>
+          <input
+            className="form-control"
+            type="text"
+            id="username"
+            name="username"
+            placeholder="username"
+            ref={userRef}
+            autoComplete="off"
+            onChange={(e) => setUser(e.target.value)}
+            required
+            aria-invalid={validName ? 'false' : 'true'}
+            aria-describedby="uidnote"
+            onFocus={() => setUserFocus(true)}
+            onBlur={() => setUserFocus(false)}
+          />
+          <p
+            id="uidnote"
+            className={
+              userFocus && user && !validName ? 'instructions' : 'offscreen'
+            }
+          >
+            4 to 24 characters.
+            <br />
+            Must begin with a letter.
+            <br />
+            Letters, numbers, underscores, hyphens allowed.
+          </p>
         </div>
         <div className="mb-3">
           <label className="form-label" htmlFor="password">
             Password
-            <input
-              className="form-control"
-              type="password"
-              name="password"
-              id="password"
-              placeholder="password"
-            />
           </label>
+          <input
+            className="form-control"
+            type="password"
+            name="password"
+            id="password"
+            placeholder="password"
+          />
         </div>
         <div className="mb-3">
           <label className="form-label" htmlFor="confirmPassword">
             Confirm Password
-            <input
-              className="form-control"
-              type="password"
-              name="confirmPassword"
-              id="confirmPassword"
-              placeholder="confirm password"
-            />
           </label>
+          <input
+            className="form-control"
+            type="password"
+            name="confirmPassword"
+            id="confirmPassword"
+            placeholder="confirm password"
+          />
         </div>
         <button className="btn btn-primary" type="submit">
           Register
