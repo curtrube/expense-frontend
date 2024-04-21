@@ -28,15 +28,11 @@ const Register = () => {
 
   useEffect(() => {
     const result = USER_REGEX.test(user);
-    console.log(result);
-    console.log(user);
     setValidName(result);
   }, [user]);
 
   useEffect(() => {
     const result = PWD_REGEX.test(pwd);
-    console.log(result);
-    console.log(pwd);
     setValidPwd(result);
     const match = pwd === matchPwd;
     setValidMatch(match);
@@ -45,6 +41,18 @@ const Register = () => {
   useEffect(() => {
     setErrMsg('');
   }, [user, pwd, matchPwd]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // if button enabled with JS hack
+    const v1 = USER_REGEX.test(user);
+    const v2 = PWD_REGEX.test(pwd);
+    if (!v1 || !v2) {
+      setErrMsg('Invalid Entry');
+      return;
+    }
+    console.log(user, pwd);
+  };
 
   return (
     <section>
@@ -58,7 +66,7 @@ const Register = () => {
       <div className="mb-4">
         <h1>Register</h1>
       </div>
-      <form>
+      <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label className="form-label" htmlFor="username">
             Username
@@ -101,7 +109,28 @@ const Register = () => {
             name="password"
             id="password"
             placeholder="password"
+            required
+            aria-invalid={validPwd ? 'false' : 'true'}
+            aria-describedby="pwdnote"
+            onChange={(e) => setPwd(e.target.value)}
+            onFocus={() => setPwdFocus(true)}
+            onBlur={() => setPwdFocus(false)}
           />
+          <p
+            id="pwdnote"
+            className={pwdFocus && !validPwd ? 'instructions' : 'offscreen'}
+          >
+            8 to 24 character.
+            <br />
+            Must include uppercase and lowercase letters, a number and a special
+            character.
+            <br />
+            Allowed special characters:
+            <span aria-label="exclamation mark">!</span>
+            <span aria-label="at symbol">@</span>
+            <span aria-label="hashtag">#</span>
+            <span aria-label="dollar sign">$</span>
+          </p>
         </div>
         <div className="mb-3">
           <label className="form-label" htmlFor="confirmPassword">
@@ -113,12 +142,36 @@ const Register = () => {
             name="confirmPassword"
             id="confirmPassword"
             placeholder="confirm password"
+            required
+            aria-invalid={validMatch ? 'false' : 'true'}
+            aria-describedby="confirmnote"
+            onChange={(e) => setMatchPwd(e.target.value)}
+            onFocus={() => setMatchFocus(true)}
+            onBlur={() => setMatchFocus(false)}
           />
+          <p
+            id="confirmnote"
+            className={matchFocus && !validMatch ? 'instructions' : 'offscreen'}
+          >
+            Must match the first password field.
+          </p>
         </div>
-        <button className="btn btn-primary" type="submit">
-          Register
-        </button>
+        <div className="d-grid">
+          <button
+            className="btn btn-primary"
+            type="submit"
+            disabled={!validName || !validPwd || !validMatch ? true : false}
+          >
+            Sign Up
+          </button>
+        </div>
       </form>
+      <div className="mt-2">
+        <p>
+          {/* put react router link here */}
+          Already registered? <a href="#">Log In</a>
+        </p>
+      </div>
     </section>
   );
 };
