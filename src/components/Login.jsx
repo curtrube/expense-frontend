@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../hooks/authProvider';
+import { useAuth } from '../contexts/authProvider';
 
 function Login() {
   const [input, setInput] = useState({

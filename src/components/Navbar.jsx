@@ -17,7 +17,7 @@ const Navbar = ({ isAuthenticated }) => {
       onSelect={handleSelect}
     >
       <Container fluid>
-        <BsNavbar.Brand as={Link} to="/">
+        <BsNavbar.Brand as={Link} to={isAuthenticated ? '/dashboard' : '/'}>
           ExpenseTracker
         </BsNavbar.Brand>
         <BsNavbar.Toggle

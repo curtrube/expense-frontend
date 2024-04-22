@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import CategoryModal from '../components/CategoryModal';
 import DeleteModal from '../components/Modal';
-import { useAuth } from '../hooks/authProvider';
+import { useAuth } from '../contexts/authProvider';
 
 const url = 'http://localhost:3000/api/categories';
 
