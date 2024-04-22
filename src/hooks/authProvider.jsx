@@ -38,7 +38,7 @@ const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    setUser(null);
+    // setUser(null);
     // setToken('');
     // Cookies.remove('accessToken');
     navigate('/login');

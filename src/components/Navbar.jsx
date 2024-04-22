@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Container, Navbar as BsNavbar, Nav } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-const Navbar = () => {
+const Navbar = ({ isAuthenticated }) => {
   const [expanded, setExpanded] = useState(false);
 
   const handleSelect = () => {
@@ -17,7 +17,7 @@ const Navbar = () => {
       onSelect={handleSelect}
     >
       <Container fluid>
-        <BsNavbar.Brand as={Link} to="/dashboard">
+        <BsNavbar.Brand as={Link} to="/">
           ExpenseTracker
         </BsNavbar.Brand>
         <BsNavbar.Toggle
@@ -26,12 +26,20 @@ const Navbar = () => {
         />
         <BsNavbar.Collapse id="navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="#" as={Link} to="/categories" active>
-              Categories
-            </Nav.Link>
-            <Nav.Link href="#" as={Link} to="/accounts">
-              Accounts
-            </Nav.Link>
+            {isAuthenticated ? (
+              <>
+                <Nav.Link href="#" as={Link} to="/categories" active>
+                  Categories
+                </Nav.Link>
+                <Nav.Link href="#" as={Link} to="/accounts">
+                  Accounts
+                </Nav.Link>
+              </>
+            ) : (
+              <Nav.Link href="#" as={Link} to="/login">
+                Login
+              </Nav.Link>
+            )}
           </Nav>
         </BsNavbar.Collapse>
       </Container>

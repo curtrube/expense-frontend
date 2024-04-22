@@ -1,10 +1,11 @@
 import { useRef, useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 
 const Register = () => {
+  const navigate = useNavigate();
   const userRef = useRef();
   const errRef = useRef();
 
@@ -71,7 +72,7 @@ const Register = () => {
       // handle success
       console.log(response.status);
       const data = await response.json();
-      console.log(data);
+      navigate('/login');
     } catch (err) {
       console.log(err);
     }
