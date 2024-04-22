@@ -1,34 +1,32 @@
-import AuthProvider from './hooks/authProvider';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import AuthProvider from './hooks/authProvider';
 import Navbar from './components/Navbar';
-import Home from './pages/Home';
-import Login from './pages/Login';
+import Home from './components/Home';
 import Categories from './pages/Categories';
 import Accounts from './pages/Accounts';
 import Dashboard from './pages/Dashboard';
 import PrivateRoute from './components/PrivateRoute';
-import { useAuth } from './hooks/authProvider';
-import { useEffect } from 'react';
 import Register from './components/Register';
+import Login from './components/Login';
 
 function App() {
   return (
     <>
-      <Register />
-      {/* <Router>
-        <AuthProvider>
-          {/* <Navbar /> 
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route element={<PrivateRoute />}>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/categories" element={<Categories />} />
-              <Route path="/accounts" element={<Accounts />} />
-            </Route>
-          </Routes>
-        </AuthProvider>
-      </Router> */}
+      <Router>
+        {/* // <AuthProvider> */}
+        {/* {/* <Navbar />  */}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/register" element={<Register />}></Route>
+          <Route path="/login" element={<Login />} />
+          <Route element={<PrivateRoute />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/categories" element={<Categories />} />
+            <Route path="/accounts" element={<Accounts />} />
+          </Route>
+        </Routes>
+        {/* </AuthProvider> */}
+      </Router>
     </>
   );
 }

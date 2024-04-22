@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
@@ -190,8 +191,7 @@ const Register = () => {
       </form>
       <div className="mt-2">
         <p>
-          {/* put react router link here */}
-          Already registered? <a href="#">Log In</a>
+          Already registered? <Link to="/login">Log In</Link>
         </p>
       </div>
     </section>
