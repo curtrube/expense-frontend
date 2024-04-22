@@ -51,7 +51,29 @@ const Register = () => {
       setErrMsg('Invalid Entry');
       return;
     }
-    console.log(user, pwd);
+    try {
+      const url = 'http://localhost:3000/api/users';
+      const response = await fetch(url, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username: user, password: pwd }),
+      });
+      // handle error
+      if (!response.ok) {
+        const data = await response.json();
+        alert(data.message);
+        throw new Error('Error in register request: ' + response.status);
+      }
+      // handle success
+      console.log(response.status);
+      const data = await response.json();
+      console.log(data);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
