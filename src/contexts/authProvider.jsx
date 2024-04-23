@@ -14,27 +14,26 @@ const AuthProvider = ({ children }) => {
       try {
         const response = await fetch('http://localhost:3000/api/auth/refresh', {
           method: 'POST',
+          credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
           },
-          credentials: 'include',
         });
+
         if (response.ok) {
           const data = await response.json();
-          console.log('token refreshed');
-          setUser(data.user);
-          setToken(data.token);
+          setUser(data.username);
+          setToken(data.accessToken);
           setIsAuthenticated(true);
-          return;
+          navigate('/dashboard');
         } else {
           setUser(null);
-          navigate('/');
+          setToken(null);
+          setIsAuthenticated(false);
+          navigate('/login');
         }
       } catch (err) {
         console.error(`error checking refresh token validity: ${err} `);
-        setUser(null);
-        setToken(null);
-        setIsAuthenticated(false);
       }
     };
     checkRefreshValidity();
@@ -43,25 +42,25 @@ const AuthProvider = ({ children }) => {
   const login = async (data) => {
     try {
       const response = await fetch('http://localhost:3000/api/auth/login', {
-        credentials: 'include',
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
       });
+
+      // we could probably remove this or handle it more cleanly
       if (response.status === 401) {
         throw new Error('Unauthorized');
       }
       if (response.ok) {
         const res = await response.json();
         if (res) {
-          // console.log(res);
           setUser(res.username);
           setToken(res.accessToken);
           setIsAuthenticated(true);
           navigate('/dashboard');
-          return;
         }
         throw new Error(response);
       }

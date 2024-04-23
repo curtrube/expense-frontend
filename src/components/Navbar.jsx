@@ -1,8 +1,13 @@
 import { useState } from 'react';
-import { Container, Navbar as BsNavbar, Nav } from 'react-bootstrap';
+import {
+  Container,
+  Navbar as BsNavbar,
+  Nav,
+  NavDropdown,
+} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-const Navbar = ({ isAuthenticated }) => {
+const Navbar = ({ isAuthenticated, username }) => {
   const [expanded, setExpanded] = useState(false);
 
   const handleSelect = () => {
@@ -20,28 +25,31 @@ const Navbar = ({ isAuthenticated }) => {
         <BsNavbar.Brand as={Link} to={isAuthenticated ? '/dashboard' : '/'}>
           ExpenseTracker
         </BsNavbar.Brand>
-        <BsNavbar.Toggle
-          aria-controls="navbar-nav"
-          onClick={() => setExpanded(expanded ? false : 'expanded')}
-        />
-        <BsNavbar.Collapse id="navbar-nav">
-          <Nav className="me-auto">
-            {isAuthenticated ? (
-              <>
+        {isAuthenticated && (
+          <>
+            <BsNavbar.Toggle
+              aria-controls="navbar-nav"
+              onClick={() => setExpanded(expanded ? false : 'expanded')}
+            />
+            <BsNavbar.Collapse id="navbar-nav">
+              <Nav className="me-auto">
                 <Nav.Link href="#" as={Link} to="/categories" active>
                   Categories
                 </Nav.Link>
                 <Nav.Link href="#" as={Link} to="/accounts">
                   Accounts
                 </Nav.Link>
-              </>
-            ) : (
-              <Nav.Link href="#" as={Link} to="/login">
-                Login
-              </Nav.Link>
-            )}
-          </Nav>
-        </BsNavbar.Collapse>
+                <NavDropdown title={username} id="basic-nav-dropdown">
+                  <NavDropdown.Item href="#action/3.1">
+                    Profile
+                  </NavDropdown.Item>
+                  <NavDropdown.Divider />
+                  <NavDropdown.Item href="#action/3.3">Logout</NavDropdown.Item>
+                </NavDropdown>
+              </Nav>
+            </BsNavbar.Collapse>
+          </>
+        )}
       </Container>
     </BsNavbar>
   );
