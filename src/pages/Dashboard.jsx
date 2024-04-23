@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Spinner from '../components/Spinner';
-import { useAuth } from '../hooks/authProvider';
+import { useAuth } from '../contexts/authProvider';
 
 function getTransactions(accessToken, setTransactions, setIsLoading) {
   fetch('http://localhost:3000/api/transactions', {

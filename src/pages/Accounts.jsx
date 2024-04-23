@@ -1,17 +1,27 @@
 import { useState, useEffect } from 'react';
 import AccountCard from '../components/AccountCard';
+import { useAuth } from '../contexts/authProvider';
 
-function getAccounts(setAccounts) {
-  fetch('http://localhost:3000/api/accounts')
-    .then((response) => response.json())
-    .then((data) => setAccounts(data.accounts));
-}
+const getAccounts = async (accessToken, setAccounts) => {
+  const response = await fetch('http://localhost:3000/api/accounts', {
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: `Bearer ${accessToken}`,
+    },
+  });
+  if (response.ok) {
+    const data = await response.json();
+    setAccounts(data.accounts);
+  }
+};
 
 export default function Accounts() {
+  const { token } = useAuth();
   const [accounts, setAccounts] = useState([]);
 
   useEffect(() => {
-    getAccounts(setAccounts);
+    getAccounts(token, setAccounts);
   }, []);
 
   return (

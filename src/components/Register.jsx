@@ -1,9 +1,11 @@
 import { useRef, useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 
 const Register = () => {
+  const navigate = useNavigate();
   const userRef = useRef();
   const errRef = useRef();
 
@@ -51,7 +53,29 @@ const Register = () => {
       setErrMsg('Invalid Entry');
       return;
     }
-    console.log(user, pwd);
+    try {
+      const url = 'http://localhost:3000/api/users';
+      const response = await fetch(url, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username: user, password: pwd }),
+      });
+      // handle error
+      if (!response.ok) {
+        const data = await response.json();
+        alert(data.message);
+        throw new Error('Error in register request: ' + response.status);
+      }
+      // handle success
+      console.log(response.status);
+      const data = await response.json();
+      navigate('/login');
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -168,8 +192,7 @@ const Register = () => {
       </form>
       <div className="mt-2">
         <p>
-          {/* put react router link here */}
-          Already registered? <a href="#">Log In</a>
+          Already registered? <Link to="/login">Log In</Link>
         </p>
       </div>
     </section>
