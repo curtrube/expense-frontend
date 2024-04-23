@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
 import Categories from './pages/Categories';
@@ -12,15 +12,16 @@ import { useAuth } from './contexts/authProvider';
 
 function App() {
   const { user, isAuthenticated } = useAuth();
-  console.log('authenticated ' + isAuthenticated);
+  const navigate = useNavigate();
 
   // const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   if (!user && !isAuthenticated) {
-  //     // navigate('/login');
-  //   }
-  // }, [user, isAuthenticated]);
+  useEffect(() => {
+    console.log('authenticated ' + isAuthenticated);
+    if (!user && !isAuthenticated) {
+      navigate('/login');
+    }
+  }, [user, isAuthenticated]);
 
   return (
     <>
