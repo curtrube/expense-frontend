@@ -12,22 +12,10 @@ import { useAuth } from './contexts/authProvider';
 
 function App() {
   const { user, isAuthenticated } = useAuth();
-  const navigate = useNavigate();
-
-  // const navigate = useNavigate();
-
-  useEffect(() => {
-    console.log('authenticated ' + isAuthenticated);
-    if (!user && !isAuthenticated) {
-      navigate('/login');
-    }
-  }, [user, isAuthenticated]);
 
   return (
     <>
-      {/* <Router> */}
-      {/* // <AuthProvider> */}
-      <Navbar isAuthenticated={isAuthenticated} />
+      <Navbar isAuthenticated={isAuthenticated} username={user} />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<Register />}></Route>
@@ -38,8 +26,6 @@ function App() {
           <Route path="/accounts" element={<Accounts />} />
         </Route>
       </Routes>
-      {/* </AuthProvider> */}
-      {/* </Router> */}
     </>
   );
 }
