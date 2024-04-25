@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import './App.css';
+import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
 import Categories from './pages/Categories';
@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard';
 import PrivateRoute from './components/PrivateRoute';
 import Register from './components/Register';
 import Login from './components/Login';
+import Footer from './components/Footer';
 import { useAuth } from './contexts/authProvider';
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
           <Route path="/accounts" element={<Accounts />} />
         </Route>
       </Routes>
+      <Footer />
     </>
   );
 }
