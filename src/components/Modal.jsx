@@ -13,14 +13,14 @@ const DeleteModal = ({ show, handleClose, handleSubmit, name }) => {
           <BsModal.Title>Delete Category</BsModal.Title>
         </BsModal.Header>
         <BsModal.Body>
-          Are you sure delete category <b>{name}</b> ?
+          Delete <b>{name}</b>?
         </BsModal.Body>
         <BsModal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Cancel
           </Button>
-          <Button variant="primary" onClick={handleSubmit}>
-            Save
+          <Button variant="success" onClick={handleSubmit}>
+            Confirm
           </Button>
         </BsModal.Footer>
       </BsModal>

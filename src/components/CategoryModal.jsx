@@ -13,7 +13,7 @@ export default function CategoryModal({
     <>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>{type === 'edit' ? 'Edit' : 'New'} category</Modal.Title>
+          <Modal.Title>{type === 'edit' ? 'Edit' : 'New'} Category</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleSubmit}>
