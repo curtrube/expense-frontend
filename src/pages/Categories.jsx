@@ -10,19 +10,22 @@ function getCategories(accessToken, setCategories) {
     credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
-      authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${accessToken}`,
     },
   })
     .then((response) => response.json())
     .then((data) => setCategories(data.categories));
 }
 
-function postCategory(category, setCategories) {
+function postCategory(token, category, setCategories) {
+  console.log('entered postCategory() with ' + JSON.stringify(category));
   fetch(url, {
     method: 'POST',
+    credentials: 'include',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(category),
   })
@@ -35,23 +38,24 @@ function postCategory(category, setCategories) {
     })
     .then((response) => response.json())
     .then((data) => {
-      const newItem = data.categories[0];
-      console.log(`created new item ${newItem}`);
-      setCategories((prevCategories) => [...prevCategories, newItem]);
+      console.log(data);
+      console.log(`created new item ${data}`);
+      setCategories((prevCategories) => [...prevCategories, data]);
     });
 }
 
-function putCategory(categoryItem, setCategories) {
-  console.log(`Entered putCategory() with item ${categoryItem}`);
-  const { id } = categoryItem;
-  console.log(id);
+function putCategory(token, category, setCategories) {
+  console.log(`Entered putCategory() with item ${JSON.stringify(category)}`);
+  const id = category.category_id;
   fetch(`${url}/${id}`, {
     method: 'PUT',
+    credentials: 'include',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(categoryItem),
+    body: JSON.stringify(category),
   })
     .then((response) => {
       console.log(`Status Code: ${response.status}`);
@@ -61,26 +65,34 @@ function putCategory(categoryItem, setCategories) {
       return response;
     })
     .then((response) => response.json())
-    .then((data) => {
-      const newItem = data.categories[0];
-      console.log(`updated item ${newItem}`);
-      setCategories((prevCategories) => [...prevCategories, newItem]);
+    .then((updatedCategory) => {
+      console.log('successfully updated item');
+      setCategories((prevCategories) =>
+        prevCategories.map((item) =>
+          item.category_id === updatedCategory.category_id
+            ? updatedCategory
+            : item
+        )
+      );
     });
 }
 
-function deleteCategory(categoryId, setCategories) {
-  console.log(`deleteing category with id: ${categoryId}`);
-  fetch(`${url}/${categoryId}`, {
+function deleteCategory(token, id, setCategories) {
+  console.log(`deleteing category with id: ${id}`);
+  fetch(`${url}/${id}`, {
     method: 'DELETE',
+    credentials: 'include',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
     },
   })
     .then((response) => response.json())
-    .then(() => {
+    .then((data) => {
+      console.log(data);
       setCategories((prevCategories) =>
-        prevCategories.filter((item) => item.category_id !== categoryId)
+        prevCategories.filter((item) => item.category_id !== id)
       );
       console.log('successfully deleted category');
     });
@@ -90,27 +102,12 @@ export default function Categories() {
   const { token } = useAuth();
   const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({});
-  const [show, setShow] = useState(false);
-  const [editModalShow, setEditModalShow] = useState(false);
-  // const [editData, setEditData] = useState(null);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
-  // handle delete modal
-  // const [deleteData, setDeleteData] = useState('');
+  const [modalShow, setModalShow] = useState(false);
   const [deleteModalShow, setDeleteModalShow] = useState(false);
-  // const handleDeleteClose = () => setDeleteShow(false);
-  // const handleDeleteShow = () => setDeleteShow(true);
 
   const [selectedItem, setSelectedItem] = useState(null);
-  const [dataLoaded, setDataLoaded] = useState(false);
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    postCategory(formData, setCategories);
-    setEditModalShow(false);
-  };
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -122,8 +119,11 @@ export default function Categories() {
 
   const openNewModal = () => {
     console.log(`entered openNewModal() with`);
-    setSelectedItem(null);
-    setEditModalShow(true);
+    const newItem = {
+      type: 'new',
+    };
+    setSelectedItem(newItem);
+    setModalShow(true);
   };
 
   const openEditModal = (item) => {
@@ -133,34 +133,40 @@ export default function Categories() {
       type: 'edit',
     };
     setSelectedItem(() => newItem);
-    setEditModalShow(true);
-  };
-
-  const handleEdit = (item) => {
-    console.log(`entered handleEdit() with ${item}`);
-    putCategory(item, setCategories);
-    setEditModalShow(false);
+    setModalShow(true);
   };
 
   const openDeleteModal = (item) => {
-    console.log(item);
     console.log(`entered openDeleteModal() with item: ${JSON.stringify(item)}`);
     setSelectedItem(() => item);
     setDeleteModalShow(true);
   };
 
+  const handleSubmit = (item) => {
+    console.log(`entered handleSubmit() with ${JSON.stringify(item)}`);
+    const { type } = item;
+    if (type === 'new') {
+      postCategory(token, formData, setCategories);
+    } else if (type === 'edit') {
+      const newItem = { ...item, ...formData };
+      putCategory(token, newItem, setCategories);
+    }
+    setModalShow(false);
+  };
+
   const handleDelete = (item) => {
     console.log(`entered handleDelete() with ${item.category_id}`);
-    deleteCategory(item.category_id, setCategories);
+    const id = item.category_id;
+    deleteCategory(token, id, setCategories);
     setDeleteModalShow(false);
   };
 
   useEffect(() => {
     getCategories(token, setCategories);
-    setDataLoaded(true);
+    setLoading(true);
   }, []);
 
-  if (!dataLoaded) {
+  if (!loading) {
     return <div>Loading...</div>;
   }
 
@@ -196,10 +202,10 @@ export default function Categories() {
       ))}
 
       <CategoryModal
-        show={editModalShow}
-        handleClose={() => setEditModalShow(false)}
+        show={modalShow}
+        handleClose={() => setModalShow(false)}
         handleChange={handleChange}
-        handleSubmit={() => handleEdit(selectedItem)}
+        handleSubmit={() => handleSubmit(selectedItem)}
         {...selectedItem}
       />
 
