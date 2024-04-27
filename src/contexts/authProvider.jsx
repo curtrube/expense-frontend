@@ -1,5 +1,8 @@
 import { useContext, createContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { API_URL } from '../constants/url';
+
+const URL = `${API_URL}/auth`;
 
 const AuthContent = createContext();
 
@@ -12,28 +15,23 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkRefreshValidity = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/auth/refresh', {
+        const response = await fetch(`${URL}/refresh`, {
           method: 'POST',
           credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
           },
         });
-
-        if (response.ok) {
-          const data = await response.json();
-          setUser(data.username);
-          setToken(data.accessToken);
-          setIsAuthenticated(true);
-          navigate('/dashboard');
-        } else {
-          setUser(null);
-          setToken(null);
-          setIsAuthenticated(false);
-          navigate('/login');
+        if (!response.ok) {
+          throw new Error(`HTTP error refreshing token: ${response.status}`);
         }
+        const data = await response.json();
+        setUser(data.username);
+        setToken(data.accessToken);
+        setIsAuthenticated(true);
+        navigate('/dashboard');
       } catch (err) {
-        console.error(`error checking refresh token validity: ${err} `);
+        console.error('error checking refresh token validity:', err);
       }
     };
     checkRefreshValidity();
@@ -41,7 +39,7 @@ const AuthProvider = ({ children }) => {
 
   const login = async (data) => {
     try {
-      const response = await fetch('http://localhost:3000/api/auth/login', {
+      const response = await fetch(`${URL}/login`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -49,31 +47,38 @@ const AuthProvider = ({ children }) => {
         },
         body: JSON.stringify(data),
       });
-
-      // we could probably remove this or handle it more cleanly
-      if (response.status === 401) {
-        throw new Error('Unauthorized');
+      if (!response.ok) {
+        throw new Error(`HTTP error logging in: ${response.status}`);
       }
-      if (response.ok) {
-        const res = await response.json();
-        if (res) {
-          setUser(res.username);
-          setToken(res.accessToken);
-          setIsAuthenticated(true);
-          navigate('/dashboard');
-        }
-        throw new Error(response);
-      }
+      const res = await response.json();
+      setUser(res.username);
+      setToken(res.accessToken);
+      setIsAuthenticated(true);
+      navigate('/dashboard');
     } catch (err) {
-      console.error(err);
+      console.error('error logging into server:', err);
     }
   };
 
-  const logout = () => {
-    // setUser(null);
-    // setToken('');
-    // Cookies.remove('accessToken');
-    navigate('/login');
+  const logout = async () => {
+    try {
+      const response = await fetch(`${URL}/logout`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error logging out: ${response.status}`);
+      }
+      setUser(null);
+      setToken(null);
+      setIsAuthenticated(false);
+      navigate('/');
+    } catch (err) {
+      console.error('error logging out of server', err);
+    }
   };
 
   return (

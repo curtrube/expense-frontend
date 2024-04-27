@@ -7,7 +7,7 @@ import {
 } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-const Navbar = ({ isAuthenticated, username }) => {
+const Navbar = ({ isAuthenticated, username, handleLogout }) => {
   const [expanded, setExpanded] = useState(false);
 
   const handleSelect = () => {
@@ -44,7 +44,9 @@ const Navbar = ({ isAuthenticated, username }) => {
                     Profile
                   </NavDropdown.Item>
                   <NavDropdown.Divider />
-                  <NavDropdown.Item href="#action/3.3">Logout</NavDropdown.Item>
+                  <NavDropdown.Item href="#" onClick={handleLogout}>
+                    Logout
+                  </NavDropdown.Item>
                 </NavDropdown>
               </Nav>
             </BsNavbar.Collapse>

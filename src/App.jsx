@@ -12,11 +12,15 @@ import Footer from './components/Footer';
 import { useAuth } from './contexts/authProvider';
 
 function App() {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
 
   return (
     <>
-      <Navbar isAuthenticated={isAuthenticated} username={user} />
+      <Navbar
+        isAuthenticated={isAuthenticated}
+        username={user}
+        handleLogout={logout}
+      />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<Register />}></Route>
